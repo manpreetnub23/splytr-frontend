@@ -1,239 +1,233 @@
 import { router } from "expo-router";
-import { useEffect, useRef } from "react";
-import {
-  Animated,
-  Easing as RNEasing,
-  Pressable,
-  StatusBar,
-  Text,
-  View,
-} from "react-native";
-import {
-  Canvas,
-  Circle,
-  Group,
-  Path,
-  Rect,
-  RoundedRect,
-  Shadow,
-  Skia,
-} from "@shopify/react-native-skia";
-import {
-  useSharedValue,
-  useDerivedValue,
-  withRepeat,
-  withSequence,
-  withTiming,
-  withDelay,
-  Easing,
-} from "react-native-reanimated";
+import { StatusBar, Text, View, Dimensions, Image, Pressable } from "react-native";
+import Svg, { Circle, Rect, Path, Ellipse, G } from "react-native-svg";
+import { Feather } from "@expo/vector-icons";
 
-// ── Floating coin ──────────────────────────────────────────
-function FloatingCoin({ cx, cy, delay, size = 22 }: { cx: number; cy: number; delay: number; size?: number }) {
-  const translateY = useSharedValue(0);
+const { width } = Dimensions.get("window");
 
-  useEffect(() => {
-    translateY.value = withDelay(
-      delay,
-      withRepeat(
-        withSequence(
-          withTiming(-14, { duration: 1400, easing: Easing.inOut(Easing.sin) }),
-          withTiming(0, { duration: 1400, easing: Easing.inOut(Easing.sin) })
-        ),
-        -1,
-        false
-      )
-    );
-  }, []);
-
-  const transform = useDerivedValue(() => [{ translateY: translateY.value }]);
-
+function SplitIllustration() {
   return (
-    <Group transform={transform}>
-      <Circle cx={cx} cy={cy} r={size} color="#ef4444" opacity={0.9}>
-        <Shadow dx={0} dy={4} blur={12} color="#ef444488" />
-      </Circle>
-      <Circle cx={cx - size * 0.25} cy={cy - size * 0.25} r={size * 0.25} color="rgba(255,255,255,0.2)" />
-      <Rect x={cx - 1.5} y={cy - size * 0.45} width={3} height={size * 0.9} color="rgba(255,255,255,0.5)" />
-      <Rect x={cx - size * 0.35} y={cy - size * 0.15} width={size * 0.7} height={3} color="rgba(255,255,255,0.5)" />
-    </Group>
+    <Svg width={width - 56} height={200} viewBox="0 0 320 200">
+      <Ellipse cx="160" cy="170" rx="130" ry="24" fill="#C1121F" opacity="0.06" />
+
+      {/* Left person */}
+      <G>
+        <Rect x="30" y="100" width="50" height="65" rx="12" fill="#fbbf24" />
+        <Circle cx="55" cy="88" r="22" fill="#fde68a" />
+        <Circle cx="47" cy="86" r="3.5" fill="#1c1917" />
+        <Circle cx="63" cy="86" r="3.5" fill="#1c1917" />
+        <Circle cx="48.5" cy="84.5" r="1.2" fill="white" />
+        <Circle cx="64.5" cy="84.5" r="1.2" fill="white" />
+        <Path d="M47 94 Q55 101 63 94" stroke="#92400e" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <Path d="M33 82 Q55 62 77 82" fill="#92400e" />
+        <Rect x="12" y="108" width="18" height="11" rx="5.5" fill="#fde68a" />
+        <Rect x="80" y="108" width="18" height="11" rx="5.5" fill="#fde68a" />
+        <Rect x="36" y="158" width="16" height="28" rx="8" fill="#fbbf24" />
+        <Rect x="58" y="158" width="16" height="28" rx="8" fill="#fbbf24" />
+        <Ellipse cx="44" cy="186" rx="11" ry="6" fill="#1c1917" />
+        <Ellipse cx="66" cy="186" rx="11" ry="6" fill="#1c1917" />
+      </G>
+
+      {/* Bill */}
+      <G>
+        <Rect x="126" y="72" width="68" height="88" rx="6" fill="white" stroke="#e4e4e7" strokeWidth="1.5" />
+        <Rect x="136" y="86" width="48" height="5" rx="2.5" fill="#f4f4f5" />
+        <Rect x="136" y="98" width="36" height="5" rx="2.5" fill="#f4f4f5" />
+        <Rect x="136" y="110" width="42" height="5" rx="2.5" fill="#f4f4f5" />
+        <Rect x="130" y="122" width="60" height="1" fill="#e4e4e7" />
+        <Rect x="136" y="130" width="20" height="7" rx="3.5" fill="#fca5a5" />
+        <Rect x="162" y="130" width="28" height="7" rx="3.5" fill="#C1121F" />
+        <Path d="M160 72 L160 60" stroke="#C1121F" strokeWidth="2" strokeDasharray="4,3" />
+        <Circle cx="155" cy="56" r="5" fill="none" stroke="#C1121F" strokeWidth="2" />
+        <Circle cx="165" cy="56" r="5" fill="none" stroke="#C1121F" strokeWidth="2" />
+        <Path d="M151 52 L169 60 M151 60 L169 52" stroke="#C1121F" strokeWidth="1.5" strokeLinecap="round" />
+      </G>
+
+      {/* Right person */}
+      <G>
+        <Rect x="240" y="100" width="50" height="65" rx="12" fill="#818cf8" />
+        <Circle cx="265" cy="88" r="22" fill="#c7d2fe" />
+        <Circle cx="257" cy="86" r="3.5" fill="#1c1917" />
+        <Circle cx="273" cy="86" r="3.5" fill="#1c1917" />
+        <Circle cx="258.5" cy="84.5" r="1.2" fill="white" />
+        <Circle cx="274.5" cy="84.5" r="1.2" fill="white" />
+        <Path d="M257 94 Q265 101 273 94" stroke="#3730a3" strokeWidth="2" fill="none" strokeLinecap="round" />
+        <Rect x="243" y="66" width="44" height="14" rx="7" fill="#1c1917" />
+        <Rect x="222" y="108" width="18" height="11" rx="5.5" fill="#c7d2fe" />
+        <Rect x="290" y="108" width="18" height="11" rx="5.5" fill="#c7d2fe" />
+        <Rect x="246" y="158" width="16" height="28" rx="8" fill="#818cf8" />
+        <Rect x="268" y="158" width="16" height="28" rx="8" fill="#818cf8" />
+        <Ellipse cx="254" cy="186" rx="11" ry="6" fill="#1c1917" />
+        <Ellipse cx="276" cy="186" rx="11" ry="6" fill="#1c1917" />
+      </G>
+
+      {/* Coins */}
+      <Circle cx="108" cy="60" r="12" fill="#fbbf24" opacity="0.9" />
+      <Circle cx="212" cy="52" r="10" fill="#fbbf24" opacity="0.85" />
+      <Circle cx="90" cy="130" r="8" fill="#fbbf24" opacity="0.6" />
+      <Circle cx="232" cy="125" r="9" fill="#fbbf24" opacity="0.7" />
+    </Svg>
   );
 }
 
-// ── Character ──────────────────────────────────────────────
-function Character() {
-  const bodyBob = useSharedValue(0);
-  const armAngle = useSharedValue(0);
-
-  useEffect(() => {
-    bodyBob.value = withRepeat(
-      withSequence(
-        withTiming(-6, { duration: 1200, easing: Easing.inOut(Easing.sin) }),
-        withTiming(0, { duration: 1200, easing: Easing.inOut(Easing.sin) })
-      ),
-      -1,
-      false
-    );
-
-    armAngle.value = withRepeat(
-      withSequence(
-        withTiming(18, { duration: 700, easing: Easing.inOut(Easing.sin) }),
-        withTiming(-18, { duration: 700, easing: Easing.inOut(Easing.sin) })
-      ),
-      -1,
-      false
-    );
-  }, []);
-
-  const bodyTransform = useDerivedValue(() => [{ translateY: bodyBob.value }]);
-
-  const leftArmTransform = useDerivedValue(() => [
-    { rotate: (armAngle.value * Math.PI) / 180 },
-  ]);
-
-  const rightArmTransform = useDerivedValue(() => [
-    { rotate: (-armAngle.value * Math.PI) / 180 },
-  ]);
-
-  const cx = 140;
-  const headY = 90;
-  const bodyTopY = 148;
-  const bodyBottomY = 240;
-
+function BalanceCard() {
   return (
-    <Group transform={bodyTransform}>
-      {/* Shadow */}
-      <Circle cx={cx} cy={bodyBottomY + 28} r={32} color="rgba(239,68,68,0.12)" />
-
-      {/* Head */}
-      <Circle cx={cx} cy={headY} r={36} color="#1a1a1a">
-        <Shadow dx={0} dy={4} blur={16} color="rgba(239,68,68,0.3)" />
-      </Circle>
-      <Circle cx={cx} cy={headY} r={36} color="#ef4444" opacity={0.4} style="stroke" strokeWidth={2} />
-
-      {/* Eyes */}
-      <Circle cx={cx - 12} cy={headY - 4} r={5} color="#ef4444" />
-      <Circle cx={cx + 12} cy={headY - 4} r={5} color="#ef4444" />
-      <Circle cx={cx - 10} cy={headY - 6} r={2} color="white" opacity={0.8} />
-      <Circle cx={cx + 14} cy={headY - 6} r={2} color="white" opacity={0.8} />
-
-      {/* Smile */}
-      <Path
-        path={(() => {
-          const p = Skia.Path.Make();
-          p.moveTo(cx - 12, headY + 12);
-          p.quadTo(cx, headY + 22, cx + 12, headY + 12);
-          return p;
-        })()}
-        color="#ef4444"
-        style="stroke"
-        strokeWidth={2.5}
-        strokeCap="round"
-      />
-
-      {/* Neck */}
-      <Rect x={cx - 8} y={headY + 34} width={16} height={14} color="#1a1a1a" />
-
-      {/* Body */}
-      <RoundedRect x={cx - 38} y={bodyTopY} width={76} height={88} r={18} color="#1a1a1a">
-        <Shadow dx={0} dy={6} blur={20} color="rgba(239,68,68,0.25)" />
-      </RoundedRect>
-      <RoundedRect x={cx - 38} y={bodyTopY} width={76} height={88} r={18} color="#ef4444" opacity={0.25} style="stroke" strokeWidth={1.5} />
-
-      {/* Chest $ */}
-      <Rect x={cx - 1.5} y={bodyTopY + 20} width={3} height={22} color="#ef4444" opacity={0.5} />
-      <Rect x={cx - 10} y={bodyTopY + 27} width={20} height={3} color="#ef4444" opacity={0.5} />
-
-      {/* Left arm */}
-      <Group transform={leftArmTransform} origin={{ x: cx - 38, y: bodyTopY + 20 }}>
-        <RoundedRect x={cx - 72} y={bodyTopY + 10} width={36} height={14} r={7} color="#1a1a1a" />
-        <Circle cx={cx - 72} cy={bodyTopY + 17} r={8} color="#1a1a1a" />
-      </Group>
-
-      {/* Right arm */}
-      <Group transform={rightArmTransform} origin={{ x: cx + 38, y: bodyTopY + 20 }}>
-        <RoundedRect x={cx + 36} y={bodyTopY + 10} width={36} height={14} r={7} color="#1a1a1a" />
-        <Circle cx={cx + 72} cy={bodyTopY + 17} r={8} color="#1a1a1a" />
-        <Circle cx={cx + 72} cy={bodyTopY + 17} r={7} color="#ef4444" opacity={0.8} />
-      </Group>
-
-      {/* Legs */}
-      <RoundedRect x={cx - 30} y={bodyBottomY} width={22} height={44} r={11} color="#1a1a1a" />
-      <RoundedRect x={cx - 36} y={bodyBottomY + 36} width={30} height={14} r={7} color="#ef4444" opacity={0.85} />
-      <RoundedRect x={cx + 8} y={bodyBottomY} width={22} height={44} r={11} color="#1a1a1a" />
-      <RoundedRect x={cx + 6} y={bodyBottomY + 36} width={30} height={14} r={7} color="#ef4444" opacity={0.85} />
-    </Group>
-  );
-}
-
-// ── Index screen ───────────────────────────────────────────
-export default function Index() {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(40)).current;
-  const btnFadeAnim = useRef(new Animated.Value(0)).current;
-  const btnSlideAnim = useRef(new Animated.Value(30)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, { toValue: 1, duration: 900, delay: 200, easing: RNEasing.out(RNEasing.cubic), useNativeDriver: true }),
-      Animated.timing(slideAnim, { toValue: 0, duration: 900, delay: 200, easing: RNEasing.out(RNEasing.cubic), useNativeDriver: true }),
-    ]).start();
-
-    Animated.parallel([
-      Animated.timing(btnFadeAnim, { toValue: 1, duration: 700, delay: 900, useNativeDriver: true }),
-      Animated.timing(btnSlideAnim, { toValue: 0, duration: 700, delay: 900, easing: RNEasing.out(RNEasing.cubic), useNativeDriver: true }),
-    ]).start();
-  }, []);
-
-  return (
-    <View className="flex-1 bg-black px-7 pb-12 pt-14">
-      <StatusBar barStyle="light-content" />
-
-      {/* App name */}
-      <Animated.View style={{ opacity: fadeAnim }}>
-        <Text className="text-center text-xs font-bold tracking-[4px] text-red-500">
-          SPLYTR
-        </Text>
-      </Animated.View>
-
-      {/* Skia canvas */}
-      <Canvas style={{ width: "100%", height: 320, marginTop: 4 }}>
-        <Circle cx={140} cy={170} r={110} color="rgba(239,68,68,0.07)" />
-        <FloatingCoin cx={48} cy={120} delay={0} size={18} />
-        <FloatingCoin cx={232} cy={100} delay={300} size={14} />
-        <FloatingCoin cx={60} cy={220} delay={600} size={12} />
-        <FloatingCoin cx={220} cy={210} delay={200} size={16} />
-        <Character />
-      </Canvas>
-
-      {/* Hero text */}
-      <Animated.View style={{ opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
-        <Text className="text-center text-[38px] font-black leading-[42px] tracking-tighter text-white">
-          No more{"\n"}
-          <Text className="text-red-500">awkward</Text>
-          {"\n"}money talks.
-        </Text>
-        <Text className="mt-4 text-center text-sm leading-6 text-zinc-500">
-          Split expenses with anyone.{"\n"}Settle up in seconds.
-        </Text>
-        <View className="mt-5 flex-row items-center justify-center gap-3">
-          <View className="h-px w-6 bg-red-500" />
-          <Text className="text-[10px] tracking-widest text-zinc-700">FAST · FAIR · SIMPLE</Text>
-          <View className="h-px w-6 bg-red-500" />
+    <View
+      className="rounded-[4px] bg-white p-6"
+      style={{
+        width: width - 56,
+        shadowColor: "#C1121F",
+        shadowOffset: { width: 0, height: 16 },
+        shadowOpacity: 0.12,
+        shadowRadius: 40,
+        elevation: 12,
+      }}
+    >
+      <View className="flex-row items-start justify-between">
+        <View>
+          <Text className="text-xs font-semibold tracking-widest text-zinc-400">
+            GROUP BALANCE
+          </Text>
+          <View className="mt-1 flex-row items-baseline">
+            <Text className="font-black text-zinc-900" style={{ fontSize: 38, letterSpacing: -2, lineHeight: 46 }}>
+              $348
+            </Text>
+            <Text className="font-black text-zinc-300" style={{ fontSize: 22, letterSpacing: -1, lineHeight: 46 }}>
+              .00
+            </Text>
+          </View>
         </View>
-      </Animated.View>
+        <View className="mt-1 rounded-[3px] bg-red-50 px-3 py-1.5">
+          <Text className="text-sm font-bold text-red-600">+$24</Text>
+        </View>
+      </View>
+
+      <View className="mt-4 h-1.5 rounded-full bg-zinc-100">
+        <View className="h-1.5 w-[62%] rounded-full bg-red-500" />
+      </View>
+      <View className="mt-1.5 flex-row items-center justify-between">
+        <Text className="text-xs text-zinc-400">Paid $216</Text>
+        <Text className="text-xs text-zinc-400">Total $348</Text>
+      </View>
+
+      <View className="my-4 h-px bg-zinc-100" />
+
+      <View className="flex-row items-center justify-between">
+        <View className="flex-row">
+          {["#fbbf24", "#818cf8", "#34d399", "#f87171"].map((c, i) => (
+            <View
+              key={i}
+              style={{
+                width: 30, height: 30, borderRadius: 15,
+                backgroundColor: c,
+                marginLeft: i > 0 ? -8 : 0,
+                borderWidth: 2, borderColor: "#fff",
+              }}
+            />
+          ))}
+        </View>
+        <View className="flex-row items-center gap-1.5">
+          <View className="h-2 w-2 rounded-full bg-red-500" />
+          <Text className="text-xs text-zinc-400">4 members</Text>
+        </View>
+      </View>
+    </View>
+  );
+}
+
+export default function Index() {
+  return (
+    <View className="flex-1 bg-[#f4f4f5]" style={{ paddingHorizontal: 28, paddingTop: 64, paddingBottom: 40 }}>
+      <StatusBar barStyle="dark-content" />
+
+      <View className="absolute -right-20 -top-20 h-72 w-72 rounded-full bg-red-500 opacity-[0.06]" />
+      <View className="absolute -left-16 bottom-16 h-52 w-52 rounded-full bg-red-400 opacity-[0.04]" />
+
+      {/* Logo */}
+      <View className="flex-row items-center">
+        <Image
+          source={require("../assets/images/icon.png")}
+          className="h-10 w-10 rounded-[3px]"
+          resizeMode="contain"
+        />
+        <Text className="ml-2.5 text-xl font-extrabold tracking-tight text-zinc-900">
+          splytr
+        </Text>
+      </View>
+
+      {/* Illustration */}
+      <View className="mt-6 items-center">
+        <SplitIllustration />
+      </View>
+
+      {/* Hero */}
+      <View className="mt-4">
+        <Text
+          className="font-black text-zinc-900"
+          style={{ fontSize: 42, lineHeight: 46, letterSpacing: -2 }}
+        >
+          Splitting bills{"\n"}made{" "}
+          <Text className="text-red-600">effortless.</Text>
+        </Text>
+        <Text className="mt-3 max-w-[280px] text-sm leading-6 text-zinc-400">
+          Track expenses, see who owes what, and settle up — no awkward texts needed.
+        </Text>
+      </View>
+
+      {/* Tags */}
+      <View className="mt-4 flex-row gap-3">
+        <View
+          className="flex-row items-center gap-2 rounded-full bg-white px-4 py-2"
+          style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, elevation: 2 }}
+        >
+          <Feather name="shield" size={13} color="#71717a" />
+          <Text className="text-xs font-semibold text-zinc-500">Private</Text>
+        </View>
+        <View
+          className="flex-row items-center gap-2 rounded-full bg-white px-4 py-2"
+          style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, elevation: 2 }}
+        >
+          <Feather name="zap-off" size={13} color="#71717a" />
+          <Text className="text-xs font-semibold text-zinc-500">No ads</Text>
+        </View>
+        <View
+          className="flex-row items-center gap-2 rounded-full bg-white px-4 py-2"
+          style={{ shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.05, shadowRadius: 6, elevation: 2 }}
+        >
+          <Feather name="users" size={13} color="#71717a" />
+          <Text className="text-xs font-semibold text-zinc-500">Groups</Text>
+        </View>
+      </View>
+
+      {/* Card */}
+      <View className="mt-5">
+        <BalanceCard />
+      </View>
+
+      <View className="flex-1" />
 
       {/* Buttons */}
-      <Animated.View
-        className="mt-8 gap-3"
-        style={{ opacity: btnFadeAnim, transform: [{ translateY: btnSlideAnim }] }}
-      >
+      <View className="gap-2">
         <Pressable
           onPress={() => router.push("/register")}
-          style={({ pressed }) => ({ opacity: pressed ? 0.85 : 1, transform: [{ scale: pressed ? 0.98 : 1 }] })}
+          style={({ pressed }) => ({
+            transform: [{ scale: pressed ? 0.97 : 1 }],
+            opacity: pressed ? 0.9 : 1,
+          })}
         >
-          <View className="items-center rounded-2xl bg-red-500 py-5">
-            <Text className="text-sm font-bold tracking-widest text-white">CREATE ACCOUNT</Text>
+          <View
+            className="items-center rounded-[3px] bg-[#C1121F] py-5"
+            style={{
+              shadowColor: "#C1121F",
+              shadowOffset: { width: 0, height: 8 },
+              shadowOpacity: 0.3,
+              shadowRadius: 20,
+              elevation: 10,
+            }}
+          >
+            <Text className="text-base font-bold tracking-wide text-white">
+              Create free account
+            </Text>
           </View>
         </Pressable>
 
@@ -241,11 +235,12 @@ export default function Index() {
           onPress={() => router.push("/login")}
           style={({ pressed }) => ({ opacity: pressed ? 0.5 : 1 })}
         >
-          <View className="items-center rounded-2xl border border-zinc-800 py-5">
-            <Text className="text-sm font-semibold text-zinc-400">Sign in</Text>
+          <View className="items-center py-3">
+            <Text className="text-base font-semibold text-zinc-400">Sign in</Text>
           </View>
         </Pressable>
-      </Animated.View>
+      </View>
+
     </View>
   );
 }

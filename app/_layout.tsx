@@ -1,11 +1,16 @@
 import { Stack, useRootNavigationState, useRouter, useSegments } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, View } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import { AuthProvider, useAuth } from "../src/providers/AuthProvider";
+import { PrefsProvider, usePrefs } from "../src/providers/PrefsProvider";
 import "./globals.css";
 
 function AuthGate() {
   const { isReady, user } = useAuth();
+  const { theme, scheme } = usePrefs();
   const navigationState = useRootNavigationState();
   const router = useRouter();
   const segments = useSegments();
@@ -29,19 +34,37 @@ function AuthGate() {
 
   if (!isReady) {
     return (
-      <View className="flex-1 items-center justify-center bg-black">
-        <ActivityIndicator color="#ef4444" size="large" />
+      <View style={{ flex: 1, alignItems: "center", justifyContent: "center", backgroundColor: theme.bg }}>
+        <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+        <ActivityIndicator color={theme.accent} size="large" />
       </View>
     );
   }
 
-  return <Stack screenOptions={{ headerShown: false }} />;
+  return (
+    <>
+      <StatusBar style={scheme === "dark" ? "light" : "dark"} />
+      <Stack
+        screenOptions={{
+          headerShown: false,
+          contentStyle: { backgroundColor: theme.bg },
+          animation: "slide_from_right",
+        }}
+      />
+    </>
+  );
 }
 
 export default function RootLayout() {
   return (
-    <AuthProvider>
-      <AuthGate />
-    </AuthProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <SafeAreaProvider>
+        <PrefsProvider>
+          <AuthProvider>
+            <AuthGate />
+          </AuthProvider>
+        </PrefsProvider>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }

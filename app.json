@@ -47,14 +47,14 @@
       "reactCompiler": true
     },
     "extra": {
-      "apiBaseUrl": "http://localhost:8000/api",
+      "apiBaseUrl": "https://splytr-backend.vercel.app/api",
       "apiBaseUrlAndroid": "http://10.0.2.2:8000/api",
-      "apiBaseUrlIos": "http://localhost:8000/api",
-      "apiBaseUrlWeb": "http://localhost:8000/api",
-      "googleExpoClientId": "486719074874-ogh4ll0self5oi8qh1t3uc23998kjh7k.apps.googleusercontent.com",
-      "googleIosClientId": "",
-      "googleAndroidClientId": "486719074874-ogh4ll0self5oi8qh1t3uc23998kjh7k.apps.googleusercontent.com",
-      "googleWebClientId": "486719074874-ogh4ll0self5oi8qh1t3uc23998kjh7k.apps.googleusercontent.com"
+      "apiBaseUrlIos": "https://splytr-backend.vercel.app/api",
+      "apiBaseUrlWeb": "https://splytr-backend.vercel.app/api",
+      "googleExpoClientId": "1063893251286-95885eok5jntbe5cfecl705m8d4p5rfl.apps.googleusercontent.com",
+      "googleIosClientId": "1063893251286-95885eok5jntbe5cfecl705m8d4p5rfl.apps.googleusercontent.com",
+      "googleAndroidClientId": "1063893251286-95885eok5jntbe5cfecl705m8d4p5rfl.apps.googleusercontent.com",
+      "googleWebClientId": "1063893251286-95885eok5jntbe5cfecl705m8d4p5rfl.apps.googleusercontent.com"
     }
   }
 }

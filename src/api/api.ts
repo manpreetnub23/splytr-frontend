@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 import { auth } from "../firebase/config";
@@ -20,7 +20,16 @@ export type BackendUser = {
 export type Group = {
 	_id: string;
 	name: string;
+	createdBy?: string;
 	members: BackendUser[];
+	createdAt: string;
+	updatedAt: string;
+};
+
+export type Friend = {
+	_id: string;
+	userId: string;
+	friendId: BackendUser;
 	createdAt: string;
 	updatedAt: string;
 };
@@ -28,6 +37,8 @@ export type Group = {
 type PopulatedUserRef = {
 	_id: string;
 	name?: string;
+	email?: string;
+	photoURL?: string;
 };
 
 export type Expense = {
@@ -86,7 +97,10 @@ const api = axios.create({
 api.interceptors.request.use(async (config) => {
 	const user = auth.currentUser;
 	if (user) {
-		const token = await user.getIdToken();
+		let token = await user.getIdToken();
+		if (!token) {
+			token = await user.getIdToken(true);
+		}
 		config.headers.Authorization = `Bearer ${token}`;
 	}
 	return config;
@@ -94,12 +108,41 @@ api.interceptors.request.use(async (config) => {
 
 api.interceptors.response.use(
 	(response) => response,
-	(error) => {
-		const message =
-			error?.response?.data?.message ||
-			error?.message ||
-			"Request failed";
-		return Promise.reject(new Error(message));
+	async (error) => {
+		if (isAxiosError(error)) {
+			const status = error.response?.status;
+			const originalConfig = error.config as
+				| (typeof error.config & { _authRetry?: boolean })
+				| undefined;
+
+			if (
+				status === 401 &&
+				originalConfig &&
+				!originalConfig._authRetry &&
+				auth.currentUser
+			) {
+				originalConfig._authRetry = true;
+				try {
+					const freshToken = await auth.currentUser.getIdToken(true);
+					originalConfig.headers = originalConfig.headers ?? {};
+					originalConfig.headers.Authorization = `Bearer ${freshToken}`;
+					return api(originalConfig);
+				} catch {
+					// Fall through and return original API error message.
+				}
+			}
+
+			const message =
+				typeof error.response?.data === "object" &&
+				error.response?.data &&
+				"message" in error.response.data
+					? String((error.response.data as { message?: unknown }).message)
+					: error.message || "Request failed";
+
+			return Promise.reject(new Error(message));
+		}
+
+		return Promise.reject(new Error("Request failed"));
 	},
 );
 
@@ -115,6 +158,11 @@ export const getCurrentUser = async () => {
 
 export const getMyGroups = async () => {
 	const { data } = await api.get<Group[]>("/groups");
+	return data;
+};
+
+export const getGroupById = async (groupId: string) => {
+	const { data } = await api.get<Group>(`/groups/${groupId}`);
 	return data;
 };
 
@@ -138,13 +186,45 @@ export const createGroup = async (payload: {
 	return data;
 };
 
+export const addGroupMembers = async (groupId: string, memberIds: string[]) => {
+	const { data } = await api.patch<Group>(`/groups/${groupId}/members`, {
+		memberIds,
+	});
+	return data;
+};
+
+export const deleteGroup = async (groupId: string) => {
+	const { data } = await api.delete<{ message: string; groupId: string }>(
+		`/groups/${groupId}`,
+	);
+	return data;
+};
+
 export const addExpense = async (payload: {
 	groupId: string;
 	amount: number;
 	description: string;
 	splits: { user: string; amount: number }[];
+	paidBy?: string;
 }) => {
 	const { data } = await api.post<Expense>("/expenses", payload);
+	return data;
+};
+
+export const getFriends = async () => {
+	const { data } = await api.get<Friend[]>("/friends");
+	return data;
+};
+
+export const addFriend = async (email: string) => {
+	const { data } = await api.post<Friend>("/friends", { email });
+	return data;
+};
+
+export const deleteFriend = async (friendId: string) => {
+	const { data } = await api.delete<{ message: string; friendId: string }>(
+		`/friends/${friendId}`,
+	);
 	return data;
 };
 
